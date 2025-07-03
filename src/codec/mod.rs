@@ -15,10 +15,10 @@ use crate::{
 };
 
 #[cfg(feature = "rtu")]
-pub(crate) mod rtu;
+pub mod rtu;
 
 #[cfg(feature = "tcp")]
-pub(crate) mod tcp;
+pub mod tcp;
 
 /// Maximum request/response PDU size.
 ///

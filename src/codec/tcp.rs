@@ -18,15 +18,15 @@ const HEADER_LEN: usize = 7;
 const PROTOCOL_ID: u16 = 0x0000; // TCP
 
 #[derive(Debug, Default)]
-pub(crate) struct AduDecoder;
+pub struct AduDecoder;
 
 #[derive(Debug)]
-pub(crate) struct ClientCodec {
-    pub(crate) decoder: AduDecoder,
+pub struct Codec {
+    pub decoder: AduDecoder,
 }
 
-impl ClientCodec {
-    pub(crate) const fn new() -> Self {
+impl Codec {
+    pub const fn new() -> Self {
         Self {
             decoder: AduDecoder,
         }
@@ -35,8 +35,8 @@ impl ClientCodec {
 
 #[cfg(feature = "tcp-server")]
 #[derive(Debug, Default)]
-pub(crate) struct ServerCodec {
-    pub(crate) decoder: AduDecoder,
+pub struct ServerCodec {
+    pub decoder: AduDecoder,
 }
 
 impl Decoder for AduDecoder {
@@ -94,7 +94,7 @@ impl Decoder for AduDecoder {
     }
 }
 
-impl Decoder for ClientCodec {
+impl Decoder for Codec {
     type Item = ResponseAdu;
     type Error = Error;
 
@@ -123,7 +123,7 @@ impl Decoder for ServerCodec {
     }
 }
 
-impl<'a> Encoder<RequestAdu<'a>> for ClientCodec {
+impl<'a> Encoder<RequestAdu<'a>> for Codec {
     type Error = Error;
 
     fn encode(&mut self, adu: RequestAdu<'a>, buf: &mut BytesMut) -> Result<()> {
@@ -181,7 +181,7 @@ mod tests {
 
         #[test]
         fn decode_header_fragment() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let mut buf = BytesMut::from(&[0x00, 0x11, 0x00, 0x00, 0x00, 0x00][..]);
             let res = codec.decode(&mut buf).unwrap();
             assert!(res.is_none());
@@ -190,7 +190,7 @@ mod tests {
 
         #[test]
         fn decode_partly_received_message() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let mut buf = BytesMut::from(
                 &[
                     TRANSACTION_ID_HI,
@@ -210,7 +210,7 @@ mod tests {
 
         #[test]
         fn decode_exception_message() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let mut buf = BytesMut::from(
                 &[
                     TRANSACTION_ID_HI,
@@ -239,7 +239,7 @@ mod tests {
 
         #[test]
         fn decode_with_invalid_protocol_id() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let mut buf = BytesMut::from(
                 &[
                     TRANSACTION_ID_HI,
@@ -259,7 +259,7 @@ mod tests {
 
         #[test]
         fn encode_read_request() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let mut buf = BytesMut::new();
             let req = Request::ReadInputRegisters(0x23, 5);
             let pdu = req.clone().into();
@@ -286,7 +286,7 @@ mod tests {
 
         #[test]
         fn encode_with_limited_buf_capacity() {
-            let mut codec = ClientCodec::new();
+            let mut codec = Codec::new();
             let pdu = Request::ReadInputRegisters(0x23, 5).into();
             let hdr = Header {
                 transaction_id: TRANSACTION_ID,

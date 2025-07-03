@@ -22,7 +22,7 @@ const MAX_FRAME_LEN: usize = 256;
 type DroppedBytes = SmallVec<[u8; MAX_FRAME_LEN]>;
 
 #[derive(Debug)]
-pub(crate) struct FrameDecoder {
+pub struct FrameDecoder {
     dropped_bytes: SmallVec<[u8; MAX_FRAME_LEN]>,
 }
 
@@ -35,7 +35,7 @@ impl Default for FrameDecoder {
 }
 
 impl FrameDecoder {
-    pub(crate) fn decode(
+    pub fn decode(
         &mut self,
         buf: &mut BytesMut,
         pdu_len: usize,
@@ -82,7 +82,7 @@ impl FrameDecoder {
         Ok(Some((slave_id, pdu_data)))
     }
 
-    pub(crate) fn recover_on_error(&mut self, buf: &mut BytesMut) {
+    pub fn recover_on_error(&mut self, buf: &mut BytesMut) {
         // If decoding failed the buffer cannot be empty
         debug_assert!(!buf.is_empty());
         // Skip and record the first byte of the buffer
@@ -105,24 +105,24 @@ impl FrameDecoder {
 
 #[cfg(any(feature = "rtu-over-tcp-server", feature = "rtu-server"))]
 #[derive(Debug, Default)]
-pub(crate) struct RequestDecoder {
+pub struct RequestDecoder {
     frame_decoder: FrameDecoder,
 }
 
 #[derive(Debug, Default)]
-pub(crate) struct ResponseDecoder {
+pub struct ResponseDecoder {
     frame_decoder: FrameDecoder,
 }
 
 #[derive(Debug, Default)]
-pub(crate) struct ClientCodec {
-    pub(crate) decoder: ResponseDecoder,
+pub struct ClientCodec {
+    pub decoder: ResponseDecoder,
 }
 
 #[cfg(any(feature = "rtu-over-tcp-server", feature = "rtu-server"))]
 #[derive(Debug, Default)]
-pub(crate) struct ServerCodec {
-    pub(crate) decoder: RequestDecoder,
+pub struct ServerCodec {
+    pub decoder: RequestDecoder,
 }
 
 #[cfg(any(feature = "rtu-over-tcp-server", feature = "rtu-server"))]

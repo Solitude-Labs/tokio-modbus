@@ -44,7 +44,7 @@ impl TransactionIdGenerator {
 /// Modbus TCP client
 #[derive(Debug)]
 pub(crate) struct Client<T> {
-    framed: Option<Framed<T, codec::tcp::ClientCodec>>,
+    framed: Option<Framed<T, codec::tcp::Codec>>,
     transaction_id_generator: TransactionIdGenerator,
     unit_id: UnitId,
 }
@@ -54,7 +54,7 @@ where
     T: AsyncRead + AsyncWrite + Unpin,
 {
     pub(crate) fn new(transport: T, slave: Slave) -> Self {
-        let framed = Framed::new(transport, codec::tcp::ClientCodec::new());
+        let framed = Framed::new(transport, codec::tcp::Codec::new());
         let transaction_id_generator = TransactionIdGenerator::new();
         let unit_id: UnitId = slave.into();
         Self {
@@ -82,7 +82,7 @@ where
         }
     }
 
-    fn framed(&mut self) -> io::Result<&mut Framed<T, codec::tcp::ClientCodec>> {
+    fn framed(&mut self) -> io::Result<&mut Framed<T, codec::tcp::Codec>> {
         let Some(framed) = &mut self.framed else {
             return Err(io::Error::new(io::ErrorKind::NotConnected, "disconnected"));
         };
