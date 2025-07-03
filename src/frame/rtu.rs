@@ -5,21 +5,21 @@ use super::*;
 
 use crate::slave::SlaveId;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) struct Header {
-    pub(crate) slave_id: SlaveId,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Header {
+    pub slave_id: SlaveId,
 }
 
 #[derive(Debug, Clone)]
 pub struct RequestAdu<'a> {
-    pub(crate) hdr: Header,
-    pub(crate) pdu: RequestPdu<'a>,
+    pub hdr: Header,
+    pub pdu: RequestPdu<'a>,
 }
 
 #[derive(Debug, Clone)]
-pub(crate) struct ResponseAdu {
-    pub(crate) hdr: Header,
-    pub(crate) pdu: ResponsePdu,
+pub struct ResponseAdu {
+    pub hdr: Header,
+    pub pdu: ResponsePdu,
 }
 
 impl<'a> From<RequestAdu<'a>> for Request<'a> {

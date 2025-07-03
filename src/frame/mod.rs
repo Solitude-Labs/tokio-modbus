@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 #[cfg(feature = "rtu")]
-pub(crate) mod rtu;
+pub mod rtu;
 
 #[cfg(feature = "tcp")]
-pub(crate) mod tcp;
+pub mod tcp;
 
 use std::{
     borrow::Cow,
@@ -155,12 +155,12 @@ pub type Address = u16;
 ///
 /// - `true` is equivalent to `ON`, `1` and `0xFF00`.
 /// - `false` is equivalent to `OFF`, `0` and `0x0000`.
-pub(crate) type Coil = bool;
+pub type Coil = bool;
 
 /// Modbus uses 16 bit for its data items.
 ///
 /// Transmitted using a big-endian representation.
-pub(crate) type Word = u16;
+pub type Word = u16;
 
 /// Number of items to process.
 pub type Quantity = u16;
@@ -476,7 +476,7 @@ impl ExceptionCode {
         }
     }
 
-    pub(crate) fn description(&self) -> &str {
+    pub fn description(&self) -> &str {
         use crate::frame::ExceptionCode::*;
 
         match *self {
@@ -503,7 +503,7 @@ pub struct ExceptionResponse {
 
 /// Represents a message from the client (slave) to the server (master).
 #[derive(Debug, Clone)]
-pub(crate) struct RequestPdu<'a>(pub(crate) Request<'a>);
+pub struct RequestPdu<'a>(pub Request<'a>);
 
 impl<'a> From<Request<'a>> for RequestPdu<'a> {
     fn from(from: Request<'a>) -> Self {
@@ -519,7 +519,7 @@ impl<'a> From<RequestPdu<'a>> for Request<'a> {
 
 /// Represents a message from the server (slave) to the client (master).
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct ResponsePdu(pub(crate) Result<Response, ExceptionResponse>);
+pub struct ResponsePdu(pub Result<Response, ExceptionResponse>);
 
 impl From<Response> for ResponsePdu {
     fn from(from: Response) -> Self {
@@ -539,7 +539,7 @@ impl From<ExceptionResponse> for ResponsePdu {
     feature = "tcp-server"
 ))]
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct OptionalResponsePdu(pub(crate) Option<ResponsePdu>);
+pub struct OptionalResponsePdu(pub Option<ResponsePdu>);
 
 #[cfg(any(
     feature = "rtu-over-tcp-server",

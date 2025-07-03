@@ -58,7 +58,7 @@ where
 
         let req_function_code = req.function_code();
         let req_adu = self.next_request_adu(req);
-        let req_hdr = req_adu.hdr;
+        let req_hdr = req_adu.hdr.clone();
 
         let framed = self.framed()?;
 

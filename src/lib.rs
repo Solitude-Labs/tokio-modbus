@@ -39,12 +39,12 @@ pub mod client;
 pub mod slave;
 pub use self::slave::{Slave, SlaveId};
 
-mod codec;
+pub mod codec;
 
 mod error;
 pub use self::error::{Error, ProtocolError};
 
-mod frame;
+pub mod frame;
 #[cfg(feature = "server")]
 pub use self::frame::SlaveRequest;
 pub use self::frame::{
