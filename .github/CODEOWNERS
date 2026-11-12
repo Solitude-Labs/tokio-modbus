@@ -1,0 +1,9 @@
+# Code owners. The org ruleset on every default branch requires a code
+# owner's approval before merge (DEV-396).
+* @talekhinezh @matcala
+
+# CI workflows and actions, and this file, need DevSecOps review
+# (DEV-420, DEV-424).
+/.github/workflows/** @dylan-small-anderson @sgrand2
+/.github/actions/** @dylan-small-anderson @sgrand2
+/.github/CODEOWNERS @dylan-small-anderson @sgrand2
